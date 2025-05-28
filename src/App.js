@@ -11,10 +11,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 export const UserContext = React.createContext();
 
 function App() {
-  const [user, setUser] = useState({
-    name: "Test User",
-    email: "test@test.com"
-  });
+  const [user, setUser] = useState();
 
   return (
     <div className="d-flex App">
