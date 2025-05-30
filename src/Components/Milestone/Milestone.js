@@ -51,20 +51,20 @@ const Milestone = ({ milestone, index }) => {
           borderTopLeftRadius: "12px",
         }}
       >
-        <b style={{width: '125px'}}>{milestone?.name || "Milestone"}</b>
+        <b style={{ width: "125px" }}>{milestone?.name || "Milestone"}</b>
         <Steps
           current={1}
           className="px-5 mt-3 me-5 d-flex justify-content-between align-items-center"
           size="small"
           items={[
             {
-              title: <p style={{fontSize: '12px'}}>Open</p>,
+              title: <p style={{ fontSize: "12px" }}>Open</p>,
             },
             {
-              title: <p style={{fontSize: '12px'}}>In progress</p>,
+              title: <p style={{ fontSize: "12px" }}>In progress</p>,
             },
             {
-              title: <p style={{fontSize: '12px'}}>Completed</p>,
+              title: <p style={{ fontSize: "12px" }}>Completed</p>,
             },
           ]}
         />
@@ -85,15 +85,21 @@ const Milestone = ({ milestone, index }) => {
           borderBottomLeftRadius: "12px",
         }}
       >
-        <div className="warranty-card-list">
-          {tasks?.map((task, idx) => (
-            <WarrantyCard
-              warranty={task}
-              key={idx}
-              //   toastMessage={toastMessage}
-            />
-          ))}
-        </div>
+        {tasks.length === 0 ? (
+          <b className="fs-5 ms-4" style={{ color: "#8fb2ff9c" }}>
+            No Tasks added yet!
+          </b>
+        ) : (
+          <div className="warranty-card-list">
+            {tasks?.map((task, idx) => (
+              <WarrantyCard
+                warranty={task}
+                key={idx}
+                //   toastMessage={toastMessage}
+              />
+            ))}
+          </div>
+        )}
       </div>
       <TaskModal milestone={milestone} ref={taskModalRef} />
     </div>

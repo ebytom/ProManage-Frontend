@@ -76,7 +76,7 @@ const Milestone = ({ tasks }) => {
         </div>
       ) : (
         <b className="fs-5 ms-4" style={{ color: "#d3d3d3" }}>
-          No Tasks added yet!
+          No Milestones added yet!
         </b>
       )}
     </div>
