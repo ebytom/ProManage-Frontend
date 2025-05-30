@@ -5,11 +5,17 @@ import { MailFilled, PhoneFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import LoginLoaderOverlay from "../../../Components/LoginLoaderOverlay/LoginLoaderOverlay";
-import { Button, Input } from "antd";
+import { Button, Input, Select, message } from "antd";
+const { Option } = Select;
 
 const Signup = ({ setauthenticated }) => {
   const [err, seterr] = useState("");
   const [loader, setLoader] = useState(true);
+
+  const [name, setName] = useState("");
+  const [role, setRole] = useState("USER"); // default User
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const { setUser } = useContext(UserContext);
   const nav = useNavigate();
@@ -30,6 +36,7 @@ const Signup = ({ setauthenticated }) => {
             }
           );
           setUser(response.data.user);
+          nav("/dashboard"); // redirect if already logged in
         }
       } catch (err) {
         console.log(err);
@@ -43,34 +50,31 @@ const Signup = ({ setauthenticated }) => {
     checkSession();
   }, [setUser, nav]);
 
-  const login = async (credentialResponse) => {
+  const handleSubmit = async () => {
+    if (!name || !email || !password) {
+      message.error("Please fill all required fields.");
+      return;
+    }
+
     setLoader(true);
     try {
-      const token = credentialResponse.credential;
-      const response = await Axios.post(
-        "/api/v1/app/auth/signUpWithGoogle",
-        {},
-        {
-          headers: {
-            authorization: `bearer ${token}`,
-          },
-        }
-      );
+      const response = await Axios.post("/api/auth/register", {
+        name,
+        role,
+        email,
+        password,
+      });
+
       const { user, token: newToken } = response.data;
       setUser(user);
       localStorage.setItem("token", newToken);
+      message.success("Signup successful!");
+      nav("/dashboard"); // navigate to dashboard after signup
     } catch (error) {
-      console.error("Login Failed:", error);
-      seterr("Login Failed. Please try again.");
+      console.error("Signup Failed:", error);
+      message.error(error.response?.data?.message || "Signup failed.");
     } finally {
       setLoader(false);
-    }
-  };
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      login();
     }
   };
 
@@ -91,7 +95,6 @@ const Signup = ({ setauthenticated }) => {
                   <hr className="border-primary-subtle mb-4" />
                   <p className="lead mb-5">
                     <strong>
-                      {" "}
                       A streamlined project management tool designed to help
                       teams plan, track, and collaborate efficiently. Manage
                       tasks, timelines, and resources all in one place to ensure
@@ -113,30 +116,52 @@ const Signup = ({ setauthenticated }) => {
                   </div>
                   <div className="w-100 d-flex">
                     <div className="flex-grow-1">
-                      {/* <GoogleLogin
-                        width={320}
-                        onSuccess={(credentialResponse) => {
-                          login(credentialResponse);
-                        }}
-                        onError={() => {
-                          console.log("Login Failed");
-                          setLoader(false);
-                        }}
-                      /> */}
                       <div className="mb-3">
                         <span>Name</span>
-                        <Input />
+                        <Input
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <span>Role</span>
+                        <Select
+                          className="w-100"
+                          value={role}
+                          onChange={(value) => setRole(value)}
+                        >
+                          <Option value="USER">User</Option>
+                          <Option value="MANAGER">Manager</Option>
+                        </Select>
                       </div>
                       <div className="mb-3">
                         <span>Email</span>
-                        <Input />
+                        <Input
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
                       </div>
                       <div className="mb-4">
                         <span>Password</span>
-                        <Input type="password"/>
+                        <Input.Password
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                        />
                       </div>
-                      <Button type="primary" className="w-100 mb-3">Submit</Button>
-                      <span>Already a user? <a href="/login"><b className="text-primary">Login</b></a></span>
+                      <Button
+                        type="primary"
+                        className="w-100 mb-3"
+                        onClick={handleSubmit}
+                      >
+                        Submit
+                      </Button>
+                      <span>
+                        Already a user?{" "}
+                        <a href="/login">
+                          <b className="text-primary">Login</b>
+                        </a>
+                      </span>
                     </div>
                   </div>
                   <hr className="border-primary-subtle mb-4" />

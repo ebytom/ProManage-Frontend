@@ -1,13 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Axios } from "../../Config/Axios/Axios";
 import { UserContext } from "../../App";
-import { Divider, Flex, message, Spin } from "antd";
-import { PlusCircleFilled } from "@ant-design/icons";
-import LoaderOverlay from "../../Components/LoaderOverlay/LoaderOverlay";
-import CategoryFilter from "../../Components/Filters/CategoryFilter/CategoryFilter";
+import { message, Spin } from "antd";
 import Filters from "../../Components/Filters/Filters";
-import WarrantyCard from "../../Components/WarrantyCard/WarrantyCard";
-import { useWarranty } from '../../Components/WarrantyContext/WarrantyContext';
+import ProjectCard from "../../Components/ProjectCard/ProjectCard";
+import { useProject } from '../../Components/ProjectContext/ProjectContext';
 
 const Dashboard = () => {
   const [contentLoader, setContentLoader] = useState(true);
@@ -19,7 +16,7 @@ const Dashboard = () => {
   const [metadata, setMetadata] = useState([]);
 
   const [messageApi, contextHolder] = message.useMessage();
-  const { setWarranties, warranties } = useWarranty();
+  const { setProjects, projects } = useProject();
 
   const { user } = useContext(UserContext);
 
@@ -34,31 +31,33 @@ const Dashboard = () => {
 
   useEffect(() => {
     const lowercasedValue = searchValue.toLowerCase().trim();
-    const filtered = warranties.filter((item) => {
+    const filtered = projects.filter((item) => {
       const matchesSearch =
-        item.itemName.toLowerCase().includes(lowercasedValue) ||
-        item.category.toLowerCase().includes(lowercasedValue);
+        item.name?.toLowerCase().includes(lowercasedValue) ||
+        item.priority?.toLowerCase().includes(lowercasedValue);
 
       const matchesCategory = selectedCategories.length
-        ? selectedCategories.includes(item.category)
+        ? selectedCategories.includes(item.priority)
         : true; // If no categories are selected, show all
 
       return matchesSearch && matchesCategory;
     });
 
     setFilteredData(filtered); // Set filtered data based on search input and selected categories
-  }, [searchValue, selectedCategories, warranties]);
+  }, [searchValue, selectedCategories, projects]);
 
   useEffect(() => {
     setContentLoader(true);
   
-    Axios.get(`/api/projects`, {
+    Axios.get(`/api/projects/my-projects`, {
       headers: {
-        authorization: `bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlYnkudGVzdGVyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ3OTIzMjI2LCJleHAiOjE3NDc5NTkyMjZ9.bdq1uTzY06N7Hmxi4kBSpdaRbz_5MNCwQZ52Urf0n2o`,
+        authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
-        setWarranties(res.data);
+        console.log(res);
+        
+        setProjects(res.data);
         setContentLoader(false);
       })
       .catch((err) => {
@@ -82,6 +81,7 @@ const Dashboard = () => {
         selectedCategories={selectedCategories}
         setSelectedCategories={setSelectedCategories}
       />
+      <h2 className="text-black mb-3 ps-2" style={{fontWeight: 700}}>Projects</h2>
       {/* <LoaderOverlay isVisible={contentLoader} /> */}
       {contentLoader ? (
         <div className="w-100 my-5 d-flex align-items-center justify-content-center">
@@ -93,11 +93,11 @@ const Dashboard = () => {
       ) : filteredData.length ? (
         <div className="warranty-card-list">
           {filteredData.map((item, index) => (
-            <WarrantyCard warranty={item} key={index} toastMessage={toastMessage}/>
+            <ProjectCard project={item} key={index} toastMessage={toastMessage}/>
           ))}
         </div>
       ) : (
-        <b className="fs-5" style={{ color: "#d3d3d3" }}>
+        <b className="fs-5 ms-4" style={{ color: "#d3d3d3" }}>
           No projects added yet—add one and give your brain a little break!
         </b>
       )}

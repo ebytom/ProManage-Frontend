@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Filters from "../../Components/Filters/Filters";
 import { Button, message, Spin } from "antd";
-import WarrantyCard from "../../Components/WarrantyCard/WarrantyCard";
+import WarrantyCard from "../../Components/ProjectCard/ProjectCard";
 import { PlusIcon } from "@primer/octicons-react";
-import Milestone from "../../Components/Milestone/Milestone";
+import Milestone from "../Milestone/Milestone";
 
 const Project = () => {
   const [searchValue, setSearchValue] = useState("");

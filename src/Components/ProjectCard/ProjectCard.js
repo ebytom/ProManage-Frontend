@@ -5,21 +5,21 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import { Progress } from "antd";
-import WarrantyDetailsModal from "../WarrantyDetailsModal/WarrantyDetailsModal";
+import ProjectDetailsModal from "../ProjectDetailsModal/ProjectDetailsModal";
 import { PeopleIcon } from "@primer/octicons-react";
 import { UserContext } from "../../App";
 import { useNavigate } from "react-router-dom";
 
-const WarrantyCard = ({ warranty }) => {
+const ProjectCard = ({ project }) => {
   const [loading, setLoading] = useState(false);
-  const warrantyDetailsModalRef = useRef();
-  const nav = useNavigate()
+  const projectModalRef = useRef();
+  const nav = useNavigate();
 
   const { user } = useContext(UserContext);
 
-  const callWarrantyDetailsModal = () => {
-    if (warrantyDetailsModalRef.current) {
-      warrantyDetailsModalRef.current.showLoading();
+  const callProjectModal = () => {
+    if (projectModalRef.current) {
+      projectModalRef.current.showLoading();
     }
   };
 
@@ -32,12 +32,6 @@ const WarrantyCard = ({ warranty }) => {
           boxShadow: "#b4b4b4 4px 5px 15px 2px",
           cursor: "pointer",
         }}
-        onClick={() => {
-          const path = warranty.taskId
-            ? `/project/${warranty._id}/task/${warranty.taskId}`
-            : `/project/${warranty._id}`;
-          nav(path);
-        }}
       >
         <div
           className="bg-white rounded-4 p-4 d-flex align-items-center justify-content-center"
@@ -47,6 +41,7 @@ const WarrantyCard = ({ warranty }) => {
             backgroundColor: "#f0f0f0",
             flexShrink: 0,
           }}
+          onClick={callProjectModal}
         >
           <img
             src={`../../assets/img/task.png`}
@@ -58,20 +53,31 @@ const WarrantyCard = ({ warranty }) => {
             }}
           />
         </div>
-        <div className="p-2 w-100 h-100 d-flex flex-column justify-content-between">
+        <div
+          className="p-2 w-100 h-100 d-flex flex-column justify-content-between"
+          onClick={() => {
+            nav(`/project/${project.id}`, {
+              state: {
+                projectName: project.name,
+              },
+            });
+          }}
+        >
           <div className="d-flex justify-content-between">
             <div style={{ textAlign: "left" }}>
-              <h6 className="fw-bold m-0 p-0">{warranty.itemName}</h6>
+              <h6 className="fw-bold m-0 p-0">{project.name}</h6>
               <span className="p-0 b-0 text-secondary" style={{ fontSize: 11 }}>
-                Expires on{" "}
-                {warranty.expiresOn
-                  .split("T")[0]
-                  .split("-")
-                  .reverse()
-                  .join("/")}
+                Ends on{" "}
+                {
+                  project.endDate
+                  // .split("T")[0]
+                  // .split("-")
+                  // .reverse()
+                  // .join("/")
+                }
               </span>
             </div>
-            {user.userId != warranty.addedBy && (
+            {user.email !== project.createdBy?.email && (
               <div>
                 <PeopleIcon />
               </div>
@@ -79,25 +85,25 @@ const WarrantyCard = ({ warranty }) => {
           </div>
           <div className="w-100" style={{ textAlign: "left" }}>
             <span style={{ fontSize: 12, fontWeight: "bold" }}>
-              {warranty.daysLeft === 0
+              {project.daysLeft === 0
                 ? "Warranty expired"
-                : `Expires in ${warranty.daysLeft} days`}
+                : `${10 - 3} tasks pending`}
             </span>
             <Progress
-              percent={warranty.percentage}
-              status={warranty.daysLeft === 0 ? "exception" : "active"}
-              format={warranty.daysLeft === 0 ? "" : () => ""}
-              strokeColor={warranty.daysLeft === 0 ? "red" : "#00348a"}
+              percent={(1 / 3) * 100}
+              status={project.daysLeft === 0 ? "exception" : "active"}
+              format={project.daysLeft === 0 ? "" : () => ""}
+              strokeColor={project.daysLeft === 0 ? "red" : "#00348a"}
             />
           </div>
         </div>
       </div>
-      <WarrantyDetailsModal
-        ref={warrantyDetailsModalRef}
-        warrantyDetails={warranty}
+      <ProjectDetailsModal
+        ref={projectModalRef}
+        projectDetails={project}
       />
     </>
   );
 };
 
-export default WarrantyCard;
+export default ProjectCard;
