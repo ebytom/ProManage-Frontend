@@ -90,7 +90,7 @@ const Login = () => {
             <div className="col-12 col-md-6 col-xl-7">
               <div className="d-flex justify-content-center text-bg-primary">
                 <div className="col-12 col-xl-9">
-                  <h1><b>Promanage</b></h1>
+                  <h1><b>ProManage</b></h1>
                   <hr className="border-primary-subtle mb-4" />
                   <p className="lead mb-5">
                     <strong>

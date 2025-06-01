@@ -64,6 +64,7 @@ const ProfileDrawer = ({ profileOpen, setProfileOpen }) => {
   const handleOk = () => {
     googleLogout();
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     window.location.reload();
   };
 
@@ -109,11 +110,17 @@ const ProfileDrawer = ({ profileOpen, setProfileOpen }) => {
               alt="User"
             />
           </div>
-          <h4 className="mb-2">{user?.name}</h4>
-          <p className="text-muted mb-4">
+          <h4 className="">{user?.name}</h4>
+          <p className="text-muted m-0">
             {/* 8547520864 <span className="mx-2">|</span>  */}
             {user?.email}
           </p>
+          <div className="w-100 d-flex justify-content-center align-items-center mt-3">
+          <p className="mb-4 bg-primary rounded-3" style={{ color: "#fff", width: "fit-content", padding: "4px 10px" }}>
+            {/* 8547520864 <span className="mx-2">|</span>  */}
+            <b>{user?.role=== 1? "Admin" : user?.role === 5 ? "Manager" : "User"}</b>
+          </p>
+          </div>
           <div className="mb-4 pb-2 d-flex flex-column gap-2">
             <button
               type="button"

@@ -22,7 +22,7 @@ import Task from "../../Pages/Task/Task";
 
 const { Option } = Select;
 
-const TaskModal = forwardRef(({milestone}, ref) => {
+const TaskModal = forwardRef(({ milestone, taskDetails }, ref) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [contentLoader, setContentLoader] = useState(false);
@@ -43,13 +43,13 @@ const TaskModal = forwardRef(({milestone}, ref) => {
   const priority = [
     { id: "high", name: "High Priority" },
     { id: "medium", name: "Medium Priority" },
-    { id: "Low", name: "Low priority" },
+    { id: "low", name: "Low priority" },
   ];
 
   const status = [
-    { id: "0", name: "Open" },
-    { id: "1", name: "In Progress" },
-    { id: "2", name: "Completed" },
+    { id: "1", name: "Open" },
+    { id: "2", name: "In Progress" },
+    { id: "3", name: "Completed" },
   ];
 
   //   useEffect(() => {
@@ -137,13 +137,25 @@ const TaskModal = forwardRef(({milestone}, ref) => {
       });
       // formData.append("addedBy", user.userId);
 
-      if (Object.keys(project)?.length > 0) {
-        // Update existing project
+      if (taskDetails && Object.keys(taskDetails)?.length > 0) {
+        
         await Axios.put(
-          `/api/tasks`,
+          `/api/tasks/${taskDetails?.id}`,
           {
-            ...formData,
-            assignees: []
+            title: formData.get("title"),
+            description: formData.get("description"),
+            priority: formData.get("priority"),
+            startDate: moment(formData.get("startDate")).format("YYYY-MM-DD").split("T")[0],
+            status: formData.get("status"),
+            endDate: moment(formData.get("startDate")).format("YYYY-MM-DD").split("T")[0],
+            project: {
+              id: loc.pathname.split("/")[2],
+            },
+            milestone: {
+              id: milestone?.id,
+            },
+            assignees: [],
+            parentTask: null,
           },
           {
             headers: {
@@ -173,7 +185,7 @@ const TaskModal = forwardRef(({milestone}, ref) => {
               id: milestone?.id,
             },
             assignees: [],
-            parentTask: null
+            parentTask: null,
           },
           {
             headers: {
@@ -232,13 +244,13 @@ const TaskModal = forwardRef(({milestone}, ref) => {
       toastMessage("warning", "Please enter an email address to share access.");
     }
   };
-  
 
   return (
-    <div key={milestone.id}>
+    // <div key={taskDetails?.id}>
+    <>
       <LoaderOverlay isVisible={contentLoader} />
       <Modal
-        title="Create Task"
+        title="Task"
         footer={[
           <Button type="primary" onClick={submitDetails}>
             Submit
@@ -261,10 +273,10 @@ const TaskModal = forwardRef(({milestone}, ref) => {
           colon={false}
           style={{ maxWidth: 600, marginTop: 50 }}
         >
-            <Form.Item
+          <Form.Item
             label="Status"
             name="status"
-            initialValue={project ? project.status : ""}
+            initialValue={taskDetails ? taskDetails.status : ""}
             rules={[
               {
                 required: true,
@@ -274,8 +286,8 @@ const TaskModal = forwardRef(({milestone}, ref) => {
           >
             <Select placeholder={"Select Status"} disabled={isDisabled()}>
               {status?.map((option) => (
-                <Option key={option.id} value={option.name}>
-                  {option.name}
+                <Option key={option?.id} value={option?.id}>
+                  {option?.name}
                 </Option>
               ))}
             </Select>
@@ -283,7 +295,7 @@ const TaskModal = forwardRef(({milestone}, ref) => {
           <Form.Item
             label="Task Title"
             name="title"
-            initialValue={project ? project.title : ""}
+            initialValue={taskDetails ? taskDetails.title : ""}
             rules={[
               {
                 required: true,
@@ -300,7 +312,7 @@ const TaskModal = forwardRef(({milestone}, ref) => {
           <Form.Item
             label="Description"
             name="description"
-            initialValue={project ? project.description : ""}
+            initialValue={taskDetails ? taskDetails.description : ""}
           >
             <TextArea
               // disabled={project ? true : false}
@@ -311,7 +323,7 @@ const TaskModal = forwardRef(({milestone}, ref) => {
           <Form.Item
             label="Priority"
             name="priority"
-            initialValue={project ? project.priority : ""}
+            initialValue={taskDetails ? taskDetails.priority : ""}
             rules={[
               {
                 required: true,
@@ -321,7 +333,7 @@ const TaskModal = forwardRef(({milestone}, ref) => {
           >
             <Select placeholder={"Select Priority"} disabled={isDisabled()}>
               {priority?.map((option) => (
-                <Option key={option.id} value={option.name}>
+                <Option key={option?.id} value={option.id}>
                   {option.name}
                 </Option>
               ))}
@@ -330,7 +342,7 @@ const TaskModal = forwardRef(({milestone}, ref) => {
           <Form.Item
             label="Comments"
             name="comments"
-            initialValue={project ? project.comments : ""}
+            initialValue={taskDetails ? taskDetails.comments : ""}
           >
             <TextArea
               // disabled={project ? true : false}
@@ -342,7 +354,9 @@ const TaskModal = forwardRef(({milestone}, ref) => {
             label="Start Date"
             name="startDate"
             initialValue={
-              project && project.endDate ? moment(project.endDate) : null
+              taskDetails && taskDetails.endDate
+                ? moment(taskDetails.endDate)
+                : null
             }
             rules={[
               {
@@ -379,7 +393,9 @@ const TaskModal = forwardRef(({milestone}, ref) => {
               },
             ]}
             initialValue={
-              project && project.endDate ? moment(project.endDate) : null
+              taskDetails && taskDetails.endDate
+                ? moment(taskDetails.endDate)
+                : null
             }
           >
             <DatePicker
@@ -431,7 +447,8 @@ const TaskModal = forwardRef(({milestone}, ref) => {
           </Form.Item>
         </Form>
       </Modal>
-    </div>
+    </>
+    // </div>
   );
 });
 

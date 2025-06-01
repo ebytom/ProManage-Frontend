@@ -226,7 +226,7 @@ const MilestoneModal = forwardRef(({},ref) => {
     <>
       <LoaderOverlay isVisible={contentLoader} />
       <Modal
-        title="Create Milestone"
+        title="Milestone"
         footer={[
                 <Button type="primary" onClick={submitDetails}>
                   Submit

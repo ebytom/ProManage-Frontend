@@ -1,10 +1,11 @@
 import { ArrowRightIcon, PlusIcon } from "@primer/octicons-react";
 import { Button, message, Spin } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import MilestoneComp from "../../Components/Milestone/Milestone";
 import WarrantyCard from "../../Components/ProjectCard/ProjectCard";
 import { Axios } from "../../Config/Axios/Axios";
 import { useLocation } from "react-router-dom";
+import { UserContext } from "../../App";
 
 const Milestone = ({ tasks }) => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -16,6 +17,9 @@ const Milestone = ({ tasks }) => {
   const loc = useLocation();
   const state = loc.state;
 
+  const {user} = useContext(UserContext);
+
+
   useEffect(() => {
     setLoader(true);
 
@@ -26,6 +30,7 @@ const Milestone = ({ tasks }) => {
     })
       .then((res) => {
         setMilestones(res.data || []);
+
         setLoader(false);
       })
       .catch((err) => {
@@ -34,6 +39,70 @@ const Milestone = ({ tasks }) => {
         setLoader(false);
       });
   }, []);
+
+  const downloadReport = () => {
+    Axios.get(`/api/report/download`, {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+      params: {
+        projectId: loc.pathname.split("/")[2],
+        type: "yearly",
+      },
+      responseType: "blob",
+    })
+      .then((res) => {
+        const blob = new Blob([res.data], { type: "application/pdf" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `Project_Report_${state?.projectName}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        messageApi.open({
+          type: "success",
+          content: "Report downloaded successfully!",
+        });
+      })
+      .catch((err) => {
+        console.error("Error downloading report:", err);
+        messageApi.open({
+          type: "error",
+          content: "Failed to download report. Please try again later.",
+        });
+      });
+  };
+
+  const emailReport = () => {
+  Axios.get(`/api/report/send`, {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+    params: {
+      projectId: loc.pathname.split("/")[2],
+      type: "yearly",
+      email: user?.email,
+      // email: "ebytomy7@gmail.com",
+    },
+  })
+    .then((res) => {
+      console.log(res); // Logs backend response
+      messageApi.open({
+        type: "success",
+        content: `Report emailed to ${user.email} successfully!`,
+      });
+    })
+    .catch((err) => {
+      console.error("Error emailing report:", err);
+      messageApi.open({
+        type: "error",
+        content: "❌ Failed to email report. Please try again later.",
+      });
+    });
+};
+
 
   return (
     <div>
@@ -50,10 +119,10 @@ const Milestone = ({ tasks }) => {
         </div>
         {milestones.length ? (
           <div className="d-flex align-items-center gap-3">
-            <Button style={{ background: "#98c2ff" }}>
+            <Button style={{ background: "#98c2ff" }} onClick={downloadReport}>
               <b>Download Report</b>
             </Button>
-            <Button style={{ background: "#98c2ff" }}>
+            <Button style={{ background: "#98c2ff" }} onClick={emailReport}>
               <b>Email Report</b>
             </Button>
           </div>

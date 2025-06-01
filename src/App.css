@@ -39,22 +39,26 @@
   }
 }
 
-
-
 /* ---------------------------------------------------------------------- */
 
-
-.categorySelect{
-background: #eee;
+.categorySelect {
+  background: #eee;
 }
 
-.categorySelect-selected{
+.categorySelect-selected {
   background-color: #3571d3;
   border-color: #00348a;
   color: white;
 }
 
 .warranty-card-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 36px;
+  padding: 12px;
+}
+
+.task-card-list {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 36px;
@@ -82,7 +86,7 @@ background: #eee;
 .warranty-card {
   background-color: #003f8820;
   border-radius: 16px;
-  box-shadow: 3px 4px 2px 2px #f6f6f6;
+  box-shadow: rgb(180, 180, 180) 2px 2px 10px 0px;
   padding: 16px;
   display: flex;
   gap: 16px;
@@ -90,9 +94,6 @@ background: #eee;
   max-width: 100%;
   flex-direction: row;
 }
-
-
-
 
 /* ------------------loader overlay-------------------- */
 
@@ -126,4 +127,12 @@ background: #eee;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+
+.holiday-cell {
+  background-color: #ffcccc; /* Light red background */
+  border-radius: 6px;
+  padding: 2px 4px;
+  min-height: 80px;
 }

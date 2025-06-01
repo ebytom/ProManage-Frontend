@@ -90,7 +90,7 @@ const Signup = ({ setauthenticated }) => {
               <div className="d-flex justify-content-center text-bg-primary">
                 <div className="col-12 col-xl-9">
                   <h1>
-                    <b>Promanage</b>
+                    <b>ProManage</b>
                   </h1>
                   <hr className="border-primary-subtle mb-4" />
                   <p className="lead mb-5">

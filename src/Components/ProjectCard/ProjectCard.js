@@ -29,7 +29,7 @@ const ProjectCard = ({ project }) => {
         className="warranty-card p-2 rounded-4 d-flex gap-3 align-items-center"
         style={{
           maxWidth: "100%",
-          boxShadow: "#b4b4b4 4px 5px 15px 2px",
+          boxShadow: "rgb(180, 180, 180) 2px 2px 10px 0px",
           cursor: "pointer",
         }}
       >
@@ -76,6 +76,17 @@ const ProjectCard = ({ project }) => {
                   // .join("/")
                 }
               </span>
+              {user?.role == 1 && (
+                <>
+                  <br />
+                  <span
+                    className="p-0 b-0 text-secondary m-0"
+                    style={{ fontSize: 11 }}
+                  >
+                    Created by {project?.createdBy?.email}
+                  </span>
+                </>
+              )}
             </div>
             {user.email !== project.createdBy?.email && (
               <div>
@@ -85,12 +96,15 @@ const ProjectCard = ({ project }) => {
           </div>
           <div className="w-100" style={{ textAlign: "left" }}>
             <span style={{ fontSize: 12, fontWeight: "bold" }}>
-              {project.daysLeft === 0
-                ? "Warranty expired"
-                : `${10 - 3} tasks pending`}
+              {project?.totalTasks == project?.completedTasks &&
+              project?.totalTasks > 0
+                ? "✔️ Completed"
+                : `${
+                    project?.totalTasks - project?.completedTasks
+                  } tasks pending`}
             </span>
             <Progress
-              percent={(1 / 3) * 100}
+              percent={(project?.completedTasks / project?.totalTasks) * 100}
               status={project.daysLeft === 0 ? "exception" : "active"}
               format={project.daysLeft === 0 ? "" : () => ""}
               strokeColor={project.daysLeft === 0 ? "red" : "#00348a"}
@@ -98,10 +112,7 @@ const ProjectCard = ({ project }) => {
           </div>
         </div>
       </div>
-      <ProjectDetailsModal
-        ref={projectModalRef}
-        projectDetails={project}
-      />
+      <ProjectDetailsModal ref={projectModalRef} projectDetails={project} />
     </>
   );
 };

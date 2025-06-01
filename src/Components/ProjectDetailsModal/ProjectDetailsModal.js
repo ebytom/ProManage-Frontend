@@ -26,6 +26,7 @@ const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
   const [project, setProject] = useState({});
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [assignee, setAssignee] = useState("")
   const [deleteBtn, setDeleteBtn] = useState(false);
   const [form] = Form.useForm();
   const [deleteForm] = Form.useForm();
@@ -34,9 +35,6 @@ const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
   const { setProjects, projects } = useProject();
   const toastMessage = useToast();
   const token = localStorage.getItem("token");
-
-  console.log("Project Details:", projectDetails);
-  
 
   const priority = [
     { id: "high", name: "High Priority" },
@@ -128,22 +126,23 @@ const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
         }
       });
       // formData.append("addedBy", user.userId);
+      console.log(projectDetails);
 
-      if (Object.keys(project)?.length > 0) {
+      if (projectDetails && Object.keys(projectDetails)?.length > 0) {
         // Update existing project
         await Axios.put(
-          `/api/projects`,
+          `/api/projects/${projectDetails?.id}`,
           {
             name: formData.get("name"),
             description: formData.get("description"),
             priority: formData.get("priority"),
-            startDate: formData.get("startDate"),
-            endDate: formData.get("endDate"),
+            startDate: formData.get("startDate").split("T")[0],
+            endDate: formData.get("endDate").split("T")[0],
+            assignees: [],
           },
           {
             headers: {
               authorization: `Bearer ${token}`,
-              // "Content-Type": "multipart/form-data",
             },
           }
         ).then((res) => {
@@ -210,27 +209,34 @@ const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
 
   const shareAccess = async () => {
     setLoading(true);
+    const formData = new FormData();
+    const emailValue = formData.get("asignees");
 
-    const email = form.getFieldValue("shareWith");
+    console.log("Sharing access with email:", assignee);
 
-    if (project && email) {
+    if (projectDetails && assignee) {
       try {
-        const response = await Axios.post(
-          `/api/v1/app/project/shareAccess/${projectDetails.id}`,
-          { email },
+        const response = await Axios.patch(
+          `/api/projects/${projectDetails.id}/add-assignee`,
+          {}, // PATCH body is empty here
           {
             headers: {
               authorization: `Bearer ${token}`,
             },
+            params: {
+              email: assignee,
+            },
           }
         );
-        setProject(response.data.project);
-        console.log(response);
 
+        console.log(response);
         toastMessage("success", response.data.message);
       } catch (err) {
         console.error("Failed to share access:", err);
-        toastMessage("warning", err.response.data.message);
+        toastMessage(
+          "warning",
+          err.response?.data?.message || "Something went wrong"
+        );
       } finally {
         setLoading(false);
       }
@@ -240,18 +246,21 @@ const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
     }
   };
 
-  const revokeAccess = async (email) => {
+  const revokeAccess = async (userDetails) => {
     setLoading(true);
     try {
-      const response = await Axios.delete(
-        `/api/v1/app/project/revokeAccess/${projectDetails.id}`,
-        {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-          data: { email }, // Pass email in the request body
-        }
-      );
+      const response = await Axios.patch(
+          `/api/projects/${projectDetails.id}/remove-assignee`,
+          {}, // PATCH body is empty here
+          {
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+            params: {
+              email: userDetails.email,
+            },
+          }
+        );
       setProject(response.data.project); // Update project data with response
       toastMessage("success", response.data.message);
     } catch (err) {
@@ -365,7 +374,9 @@ const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
             label="Start Date"
             name="startDate"
             initialValue={
-              projectDetails && projectDetails.endDate ? moment(projectDetails.endDate) : null
+              projectDetails && projectDetails.endDate
+                ? moment(projectDetails.endDate)
+                : null
             }
             rules={[
               {
@@ -402,7 +413,9 @@ const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
               },
             ]}
             initialValue={
-              projectDetails && projectDetails.endDate ? moment(projectDetails.endDate) : null
+              projectDetails && projectDetails.endDate
+                ? moment(projectDetails.endDate)
+                : null
             }
           >
             <DatePicker
@@ -440,7 +453,9 @@ const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
               valuePropName="fileList"
               getValueFromEvent={normFile}
               initialValue={
-                projectDetails && projectDetails.invoiceURL && projectDetails.invoiceURL?.length > 0
+                projectDetails &&
+                projectDetails.invoiceURL &&
+                projectDetails.invoiceURL?.length > 0
                   ? [projectDetails.invoiceURL]
                   : []
               }
@@ -460,23 +475,26 @@ const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
             </Form.Item>
           )}
 
-          {projectDetails && projectDetails.addedBy === user.userId && (
+          {projectDetails && user?.role !== 10 && (
             <>
               <hr style={{ color: "#919191" }} />
               <Form.Item label="Assignees" name="assignees">
                 <div className="d-flex gap-2">
-                  <Input />
+                  <Input
+                    value={assignee}
+                    onChange={(e) => setAssignee(e.target.value)}
+                  />
                   <Button type="primary" onClick={shareAccess}>
                     <ShareIcon size={16} />
                   </Button>
                 </div>
-                {projectDetails?.sharedWith?.length > 0 && (
+                {projectDetails?.assignees?.length > 0 && (
                   <div
                     style={{ border: "1px solid #eee" }}
                     className="p-2 mt-2 rounded d-grid gap-2"
                   >
                     {projectDetails &&
-                      projectDetails?.sharedWith?.map((user, index) => {
+                      projectDetails?.assignees?.map((user, index) => {
                         return (
                           <div
                             key={index}
@@ -486,7 +504,7 @@ const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
                               width: "fit-content",
                             }}
                           >
-                            <span style={{ fontSize: 14 }}>{user}</span>
+                            <span style={{ fontSize: 14 }}>{user?.email}</span>
                             <ConfirmModal
                               title="Remove Access"
                               content="Are you sure you want remove access for  this user?"
