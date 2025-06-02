@@ -21,7 +21,7 @@ const { Option } = Select;
 
 const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [contentLoader, setContentLoader] = useState(false);
   const [project, setProject] = useState({});
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
