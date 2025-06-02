@@ -43,24 +43,24 @@ const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
   ];
 
   useEffect(() => {
-    setLoading(true);
-    if (projectDetails) {
-      Axios.get(`/api/v1/app/project/getProjectById/${projectDetails?._id}`, {
-        params: {
-          id: projectDetails?.id,
-        },
-      })
-        .then((res) => {
-          setProject(res.data);
-          setLoading(false);
-        })
-        .catch((err) => {
-          setProject({});
-          setIsError(true);
-          setLoading(false);
-        });
-    }
-    setLoading(false);
+    // setLoading(true);
+    // if (projectDetails) {
+    //   Axios.get(`/api/v1/app/project/getProjectById/${projectDetails?._id}`, {
+    //     params: {
+    //       id: projectDetails?.id,
+    //     },
+    //   })
+    //     .then((res) => {
+    //       setProject(res.data);
+    //       setLoading(false);
+    //     })
+    //     .catch((err) => {
+    //       setProject({});
+    //       setIsError(true);
+    //       setLoading(false);
+    //     });
+    // }
+    // setLoading(false);
   }, []);
 
   const showLoading = () => {
@@ -125,8 +125,6 @@ const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
           formData.append(key, values[key]);
         }
       });
-      // formData.append("addedBy", user.userId);
-      console.log(projectDetails);
 
       if (projectDetails && Object.keys(projectDetails)?.length > 0) {
         // Update existing project
@@ -150,8 +148,6 @@ const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
           toastMessage("success", "Project updated successfully!");
         });
       } else {
-        // Add new project
-        console.log("Adding new project with formData:", formData.get("name"));
 
         await Axios.post(
           "/api/projects",
@@ -228,8 +224,6 @@ const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
             },
           }
         );
-
-        console.log(response);
         toastMessage("success", "Project access shared successfully!");
       } catch (err) {
         console.error("Failed to share access:", err);

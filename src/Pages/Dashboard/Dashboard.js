@@ -58,8 +58,6 @@ const Dashboard = () => {
       },
     })
       .then((res) => {
-        console.log(res);
-
         setProjects(res.data);
         setContentLoader(false);
       })

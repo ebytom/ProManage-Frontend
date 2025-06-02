@@ -65,9 +65,13 @@ const Signup = ({ setauthenticated }) => {
         password,
       });
 
+      console.log(response);
+      
+
       const { user, token: newToken } = response.data;
       setUser(user);
       localStorage.setItem("token", newToken);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
       message.success("Signup successful!");
       nav("/dashboard"); // navigate to dashboard after signup
     } catch (error) {

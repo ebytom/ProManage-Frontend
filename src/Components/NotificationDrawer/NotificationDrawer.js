@@ -18,26 +18,24 @@ const NotificationDrawer = ({ navOpen, setNavOpen }) => {
 
   useEffect(() => {
     // setContentLoader(true);
-    Axios.get(
-      `/api/v1/app/warranty/getExpiringWarrantiesByUser/${user.userId}`,
-      {
-        params: {
-          addedBy: user.userId,
-        },
-        headers: {
-          authorization: `bearer ${token}`,
-        },
-      }
-    )
-      .then((res) => {
-        setNotifications(res.data);
-        // setContentLoader(false);
-        console.log(res);
-      })
-      .catch((err) => {
-        setIsError(true);
-        // setContentLoader(false);
-      });
+    // Axios.get(
+    //   `/api/v1/app/warranty/getExpiringWarrantiesByUser/${user.userId}`,
+    //   {
+    //     params: {
+    //       addedBy: user.userId,
+    //     },
+    //     headers: {
+    //       authorization: `bearer ${token}`,
+    //     },
+    //   }
+    // )
+    //   .then((res) => {
+    //     setNotifications(res.data);
+    //   })
+    //   .catch((err) => {
+    //     setIsError(true);
+    //     // setContentLoader(false);
+    //   });
 
     return () => {};
   }, []);

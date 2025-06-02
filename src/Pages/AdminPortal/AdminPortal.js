@@ -22,8 +22,6 @@ export default function AdminPortal() {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-
-      console.log(res);
       
 
       // Filter out ADMINs

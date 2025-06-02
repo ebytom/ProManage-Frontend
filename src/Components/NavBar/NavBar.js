@@ -41,16 +41,12 @@ const NavBar = () => {
       },
     })
       .then((res) => {
-        console.log(res);
-
         setSummary(res.data);
       })
       .catch((err) => {
         console.error("Error fetching user summary:", err);
       });
   }, []);
-
-  console.log(user);
 
   return (
     <>

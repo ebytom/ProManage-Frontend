@@ -230,7 +230,6 @@ const TaskModal = forwardRef(({ milestone, taskDetails }, ref) => {
           }
         );
         setProject(response.data.project);
-        console.log(response);
 
         toastMessage("success", "Access shared successfully!");
       } catch (err) {

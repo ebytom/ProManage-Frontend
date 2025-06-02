@@ -24,8 +24,6 @@ const TaskCard = ({ task }) => {
     }
   };
   
-  console.log(task);
-  
 
   return (
     <>

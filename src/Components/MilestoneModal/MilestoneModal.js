@@ -45,27 +45,6 @@ const MilestoneModal = forwardRef(({},ref) => {
     { id: "low", name: "Low priority" },
   ];
 
-//   useEffect(() => {
-//     setLoading(true);
-//     if (projectDetails) {
-//       Axios.get(`/api/v1/app/project/getProjectById/${projectDetails?._id}`, {
-//         params: {
-//           id: projectDetails?._id,
-//         },
-//       })
-//         .then((res) => {
-//           setProject(res.data);
-//           setLoading(false);
-//         })
-//         .catch((err) => {
-//           setProject({});
-//           setIsError(true);
-//           setLoading(false);
-//         });
-//     }
-//     setLoading(false);
-//   }, []);
-
   const showLoading = () => {
     setOpen(true);
     // setLoading(true);
@@ -149,8 +128,6 @@ const MilestoneModal = forwardRef(({},ref) => {
           toastMessage("success", "Project updated successfully!");
         });
       } else {
-        // Add new project
-        console.log("Adding new project with formData:", formData.get("name"));
 
         await Axios.post(
           "/api/milestones",
@@ -207,7 +184,6 @@ const MilestoneModal = forwardRef(({},ref) => {
           }
         );
         setProject(response.data.project);
-        console.log(response);
 
         toastMessage("success", "Access shared successfully!");
       } catch (err) {
