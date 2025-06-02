@@ -6,26 +6,21 @@ import { UserContext } from "../../App";
 
 // Default holidays with type 'holiday'
 const defaultHolidays = [
-  { date: "2025-04-01", name: "April Fools’ Day", type: "holiday" },
   { date: "2025-04-07", name: "World Health Day", type: "holiday" },
   { date: "2025-04-14", name: "Ambedkar Jayanti", type: "holiday" },
   { date: "2025-04-22", name: "Earth Day", type: "holiday" },
-  { date: "2025-05-01", name: "Labour Day", type: "holiday" },
   { date: "2025-05-09", name: "Rabindranath Tagore Jayanti", type: "holiday" },
   { date: "2025-05-12", name: "International Nurses Day", type: "holiday" },
   { date: "2025-05-25", name: "World Geek Pride Day", type: "holiday" },
   { date: "2025-06-05", name: "World Environment Day", type: "holiday" },
   { date: "2025-06-15", name: "Founders Day", type: "holiday" },
   { date: "2025-06-21", name: "International Yoga Day", type: "holiday" },
-  { date: "2025-06-28", name: "Social Media Day", type: "holiday" },
   { date: "2025-07-01", name: "National Doctor’s Day", type: "holiday" },
   { date: "2025-07-04", name: "American Independence Day", type: "holiday" },
   { date: "2025-07-11", name: "World Population Day", type: "holiday" },
-  { date: "2025-07-17", name: "World Emoji Day", type: "holiday" },
   { date: "2025-08-12", name: "International Youth Day", type: "holiday" },
   { date: "2025-08-15", name: "Independence Day (India)", type: "holiday" },
   { date: "2025-08-19", name: "World Photography Day", type: "holiday" },
-  { date: "2025-08-29", name: "National Sports Day", type: "holiday" },
 ];
 
 const CalendarComponent = () => {
