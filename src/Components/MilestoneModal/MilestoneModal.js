@@ -138,7 +138,7 @@ const MilestoneModal = forwardRef(({},ref) => {
             startDate: formData.get("startDate"),
             endDate: formData.get("endDate"),
             project: {
-                id : loc.pathname.split("/")[2]
+                id : loc.pathname?.split("/")[2]
             }
           },
           {

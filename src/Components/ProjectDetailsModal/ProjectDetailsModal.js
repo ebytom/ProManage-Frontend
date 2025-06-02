@@ -134,8 +134,8 @@ const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
             name: formData.get("name"),
             description: formData.get("description"),
             priority: formData.get("priority"),
-            startDate: formData.get("startDate").split("T")[0],
-            endDate: formData.get("endDate").split("T")[0],
+            startDate: formData.get("startDate")?.split("T")[0],
+            endDate: formData.get("endDate")?.split("T")[0],
             assignees: [],
           },
           {

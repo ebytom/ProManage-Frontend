@@ -73,7 +73,7 @@ const TaskCard = ({ task }) => {
               <span className="p-0 b-0 text-secondary" style={{ fontSize: 11 }}>
                 Due on{" "}
                 {
-                  task?.endDate.split("T")[0]
+                  task?.endDate?.split("T")[0]
                   // .split("T")[0]
                   // .split("-")
                   // .reverse()

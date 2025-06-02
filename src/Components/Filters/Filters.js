@@ -95,7 +95,7 @@ const Filters = ({
             </Button>
           </Popover>
           {
-          loc.pathname.split("/")[1] === "project" ? (
+          loc.pathname?.split("/")[1] === "project" ? (
             <Button
               style={
                 user?.role > 5

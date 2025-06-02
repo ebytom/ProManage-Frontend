@@ -145,11 +145,11 @@ const TaskModal = forwardRef(({ milestone, taskDetails }, ref) => {
             title: formData.get("title"),
             description: formData.get("description"),
             priority: formData.get("priority"),
-            startDate: moment(formData.get("startDate")).format("YYYY-MM-DD").split("T")[0],
+            startDate: moment(formData.get("startDate")).format("YYYY-MM-DD")?.split("T")[0],
             status: formData.get("status"),
-            endDate: moment(formData.get("startDate")).format("YYYY-MM-DD").split("T")[0],
+            endDate: moment(formData.get("startDate")).format("YYYY-MM-DD")?.split("T")[0],
             project: {
-              id: loc.pathname.split("/")[2],
+              id: loc.pathname?.split("/")[2],
             },
             milestone: {
               id: milestone?.id,
@@ -179,7 +179,7 @@ const TaskModal = forwardRef(({ milestone, taskDetails }, ref) => {
             status: formData.get("status"),
             endDate: formData.get("endDate"),
             project: {
-              id: loc.pathname.split("/")[2],
+              id: loc.pathname?.split("/")[2],
             },
             milestone: {
               id: milestone?.id,

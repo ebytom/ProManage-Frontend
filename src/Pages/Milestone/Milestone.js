@@ -23,7 +23,7 @@ const Milestone = ({ tasks }) => {
   useEffect(() => {
     setLoader(true);
 
-    Axios.get(`/api/milestones/project/${loc.pathname.split("/")[2]}`, {
+    Axios.get(`/api/milestones/project/${loc.pathname?.split("/")[2]}`, {
       headers: {
         authorization: `Bearer ${token}`,
       },
@@ -46,7 +46,7 @@ const Milestone = ({ tasks }) => {
         authorization: `Bearer ${token}`,
       },
       params: {
-        projectId: loc.pathname.split("/")[2],
+        projectId: loc.pathname?.split("/")[2],
         type: "yearly",
       },
       responseType: "blob",
@@ -81,7 +81,7 @@ const Milestone = ({ tasks }) => {
       authorization: `Bearer ${token}`,
     },
     params: {
-      projectId: loc.pathname.split("/")[2],
+      projectId: loc.pathname?.split("/")[2],
       type: "yearly",
       email: user?.email,
       // email: "ebytomy7@gmail.com",
