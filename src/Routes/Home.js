@@ -7,17 +7,22 @@ import Project from "../Pages/Project/Project";
 import Task from "../Pages/Task/Task";
 import Calendar from "../Pages/Calendar/Calender";
 import AdminPortal from "../Pages/AdminPortal/AdminPortal";
-
-// Dummy NeedApproval component (you can replace this with your own page)
-const NeedApproval = () => (
-  <div className="fs-bold w-100 d-flex justify-content-center flex-column justify-content-center align-items-center">
-    <h3 style={{ padding: "1rem" }}>Need Approval 🥹</h3>
-    <a href="/">Raise Request</a>
-  </div>
-);
+import { useToast } from "../Components/ToastContext/ToastContext";
+import { Button } from "antd";
 
 const Home = () => {
   const { user } = useContext(UserContext);
+  const toastMessage = useToast();
+
+  const NeedApproval = () => (
+    <div
+      className="fs-bold w-100 d-flex justify-content-center flex-column justify-content-center align-items-center"
+      onClick={() => toastMessage("success", "Request raised successfully!")}
+    >
+      <h3 style={{ padding: "1rem" }}>Need Approval 🥹</h3>
+      <Button>Raise Request</Button>
+    </div>
+  );
 
   const showRoutes = () => {
     // For role 5 users who are not managers, show "Need Approval"
