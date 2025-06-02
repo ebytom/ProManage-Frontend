@@ -232,7 +232,7 @@ const TaskModal = forwardRef(({ milestone, taskDetails }, ref) => {
         setProject(response.data.project);
         console.log(response);
 
-        toastMessage("success", response.data.message);
+        toastMessage("success", "Access shared successfully!");
       } catch (err) {
         console.error("Failed to share access:", err);
         toastMessage("warning", err.response.data.message);

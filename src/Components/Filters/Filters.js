@@ -18,7 +18,7 @@ const Filters = ({
   const categories = [
     { id: "high", name: "High Priority" },
     { id: "medium", name: "Medium Priority" },
-    { id: "Low", name: "Low priority" },
+    { id: "low", name: "Low priority" },
   ];
   const warrantyDetailsModalRef = useRef();
   const milestoneModalRef = useRef();

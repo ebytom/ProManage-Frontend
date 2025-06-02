@@ -139,7 +139,7 @@ const NavBar = () => {
         ></Divider>
       </div>
       {loc.pathname === "/" ||
-        (loc.pathname === "/dashboard" && (
+        (loc.pathname === "/dashboard" && !(user?.role === 5 && !user?.isManager) && (
           <div className="d-flex gap-4 mb-5 px-3" style={{ color: "#002f72" }}>
             <div className="bg-primary-subtle d-flex flex-column p-3 rounded-4 shadow-sm w-100">
               <b style={{ fontSize: "16px" }}>Total Projects</b>

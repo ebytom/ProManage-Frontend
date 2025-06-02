@@ -39,7 +39,7 @@ const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
   const priority = [
     { id: "high", name: "High Priority" },
     { id: "medium", name: "Medium Priority" },
-    { id: "Low", name: "Low priority" },
+    { id: "low", name: "Low priority" },
   ];
 
   useEffect(() => {
@@ -230,7 +230,7 @@ const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
         );
 
         console.log(response);
-        toastMessage("success", response.data.message);
+        toastMessage("success", "Project access shared successfully!");
       } catch (err) {
         console.error("Failed to share access:", err);
         toastMessage(
@@ -262,7 +262,7 @@ const ProjectDetailsModal = forwardRef(({ projectDetails }, ref) => {
           }
         );
       setProject(response.data.project); // Update project data with response
-      toastMessage("success", response.data.message);
+      toastMessage("success", "Access revoked successfully!");
     } catch (err) {
       console.error("Failed to revoke access:", err);
       toastMessage("warning", err.response.data.message);

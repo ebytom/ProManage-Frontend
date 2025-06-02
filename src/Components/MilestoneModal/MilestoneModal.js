@@ -42,7 +42,7 @@ const MilestoneModal = forwardRef(({},ref) => {
   const priority = [
     { id: "high", name: "High Priority" },
     { id: "medium", name: "Medium Priority" },
-    { id: "Low", name: "Low priority" },
+    { id: "low", name: "Low priority" },
   ];
 
 //   useEffect(() => {
@@ -209,7 +209,7 @@ const MilestoneModal = forwardRef(({},ref) => {
         setProject(response.data.project);
         console.log(response);
 
-        toastMessage("success", response.data.message);
+        toastMessage("success", "Access shared successfully!");
       } catch (err) {
         console.error("Failed to share access:", err);
         toastMessage("warning", err.response.data.message);
